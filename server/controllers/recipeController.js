@@ -110,149 +110,141 @@ exports.exploreLatest = async (req, res) => {
 };
 
 
+/**
+ * get /explore-random
+ * explore random as json
+ */
+exports.exploreRandom = async (req, res) => {
+  try {
+    let count = await Recipe.find().countDocuments();
+    let random = Math.floor(Math.random() * count)
+    let recipe = await Recipe.findOne().skip(random).exec()
+    res.render('recipe', { title: 'Cooking Blog - Recipe', recipe })
+    
+  } catch (error) {
+    res.status(500).send({ message: error.message || "Error occured" });
+  }
+};
 
 
 
+/**
+ * get /submit-recipe
+ * submit recipe
+ */
+exports.submitRecipe = async(req, res) => {
+  const infoErrorsObj = req.flash('infoErrors');
+  const infoSubmitObj = req.flash('infoSubmit')
 
 
+  res.render('submit-recipe', {
+    title: 'cooking Blog - submit recipe', infoErrorsObj, infoSubmitObj
+  }) 
+}
 
+/**
+ * post /submit-recipe
+ * submit recipe
+ */
+exports.submitRecipeOnPost = async(req, res) => {
+  try{
 
+    //uploading an image to the server
+    let imageUploadFile;
+    let uploadPath;
+    let newImageName;
+    if(!req.files || Object.keys(req.files).length ===0){
+      console.log("No files were uploaded")
+    }else {
+      imageUploadFile = req.files.image;
+      newImageName = Date.now() + imageUploadFile.name;
 
+      uploadPath = require('path').resolve('./') + '/public/uploads/' + newImageName;
+      imageUploadFile.mv(uploadPath, function(err){
+        if(err) return res.status(500).send(err)
+      })
+    }
 
+    const newRecipe = new Recipe({
+      name: req.body.name ,
+      description: req.body.description,
+      email: req.body.email,
+      ingredients: req.body.ingredient,
+      category: req.body.category,
+      image: newImageName,
+    })
 
+    await newRecipe.save()
 
+    req.flash('infoSubmit', 'Recipe has been added.')
+    res.redirect('/submit-recipe')
 
+  } catch(error){
+    // res.json(error)
+    req.flash('infoErrors', error)
+    res.redirect('/submit-recipe')
+  }
 
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// async function insertDummyCategoryDate() {
-//     try {
-//         await Category.insertMany([
-//             {
-//                 "name": "Thai",
-//                 "image": "thai-food.jpg"
-//             },
-//             {
-//                 "name": "American",
-//                 "image": "american-food.jpg"
-//             },
-//             {
-//                 "name": "Chinese",
-//                 "image": "chinese-food.jpg"
-//             },
-//             {
-//                 "name": "Mexican",
-//                 "image": "mexican-food.jpg"
-//             },
-//             {
-//                 "name": "Indian",
-//                 "image": "indian-food.jpg"
-//             },
-//             {
-//                 "name": "Spanish",
-//                 "image": "spanish-food.jpg"
-//             }
-//         ])
-//     } catch (error) {
-//         console.log('err ', + error)
-//     }
+// // update a record
+// async function updateRecipe(){
+//   try {
+//     const res = await Recipe.updateOne({ name: 'ingredients'}, {name: 'bojji'})
+//     res.n //Number of documentes mateched
+//     res.nModified //Number of documents modified
+//   }catch(error) {
+//     console.log(error)
+//   }
 // }
-// insertDummyCategoryDate()
+// // updateRecipe()
 
 
-
-
-// async function insertDummyRecipyDate() {
-//     try {
-//         await Recipe.insertMany([
-//             {
-//                 "name": "Chicken pesto orzo salad",
-//                 "description": `Elevate standard pasta salad by using orzo and pesto. The dish also offers a good way to make the most of asparagus while it’s in season in the spring, too`,
-//                 "email": "https://www.bbcgoodfoodme.com/recipes/chicken-pesto-orzo-salad/",
-//                 "ingredients": [
-//                     "2 boneless, skinless chicken breasts",
-//                     "1 lemon, zested and juiced",
-//                     "3 garlic cloves, 2 crushed, 1 left whole",
-//                 ],
-//                 "category": "Mexican",
-//                 "image": "Chicken-pesto-orzo-salad.jpg"
-//             },
-//             {
-//                 "name": "Taramasalata",
-//                 "description": `Whip up homemade taramasalata instead of using shop-bought. It’s easier than you might think and is a great addition to a grazing platter`,
-//                 "email": "https://www.bbcgoodfoodme.com/recipes/taramasalata/",
-//                 "ingredients": [
-//                     "100g crustless stale white bread (about 5-6 slices)",
-//                     "250g smoked cod's roe",
-//                     "1 lemon, juiced",
-//                 ],
-//                 "category": "Mexican",
-//                 "image": "Taramasalata.jpg"
-//             },
-//             {
-//                 "name": "Healthy tuna pasta",
-//                 "description": `Try our quick and easy healthy tuna pasta. It’s comforting, but also packed with three of your five-a-day and can be doubled to feed a family`,
-//                 "email": "https://www.bbcgoodfoodme.com/recipes/healthy-tuna-pasta/",
-//                 "ingredients": [
-//                     "150g wholemeal penne",
-//                     "1 large leek (200g), halved, and thinly sliced",
-//                     "1 tsp olive oil",
-//                 ],
-//                 "category": "Indian",
-//                 "image": "Healthy-tuna-pasta.jpg"
-//             },
-//             {
-//                 "name": "Panuozzo sandwich",
-//                 "description": `Make your own baguettes and pesto to make these pizza-inspired sandwiches for the whole family. They’re surprisingly quick and easy to make and are great for lunch or a light dinner`,
-//                 "email": "https://www.bbcgoodfoodme.com/recipes/panuozzo-sandwich/",
-//                 "ingredients": [
-//                     "300g strong white bread flour, plus extra for dusting",
-//                     "3g (about half a sachet) fast-action dried yeast",
-//                     "1 tbsp olive oil",
-//                 ],
-//                 "category": "American",
-//                 "image": "Panuozzo-sandwich.jpg"
-//             },
-//             {
-//                 "name": "Blueberry smoothie recipe",
-//                 "description": `Make a quick and simple blueberry smoothie with yogurt, banana and apple juice for busy mornings. You can easily make it vegan by using coconut yogurt`,
-//                 "email": "https://www.bbcgoodfoodme.com/recipes/blueberry-smoothie-recipe/",
-//                 "ingredients": [
-//                     "175g blueberries",
-//                     "1 small banana, sliced",
-//                     "1 tbsp natural or Greek yogurt",
-//                 ],
-//                 "category": "Thai",
-//                 "image": "Blueberry-smoothie.jpg"
-//             },
-                
-//         ])
-//     } catch (error) {
-//         console.log('err ', + error)
-//     }
+// // delete a recipe
+// async function deleteRecipe() {
+//   try {
+//     const res = await Recipe.deleteOne({ name: 'New chocolate Cake' })
+//   } catch (error) {
+//     console.log(error)
+//   }
 // }
-// insertDummyRecipyDate()
+// // deleteRecipe()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
