@@ -50,3 +50,9 @@ a {
 
 
 
+.login_bg_image {
+    background-image: url("/img/publish-recipe.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+    height: 310px;
+}
