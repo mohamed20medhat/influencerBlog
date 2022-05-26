@@ -32,9 +32,22 @@
 
 			<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
 				<li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
-				<li><a href="/submit-recipe" class="nav-link px-2 link-secondary">Submit</a></li>
 				<li><a href="/contact" class="nav-link px-2 link-secondary">Contact</a></li>
-				<li><a href="/user/login" class="nav-link px-2 link-secondary">Login</a></li>
+				
+					
+					
+				<% if(typeof userAccountPrimumOrNot !== 'undefined' && userAccountPrimumOrNot === true){ %>
+					<li><a href="/submit-recipe" class="nav-link px-2 link-secondary">Submit</a></li>
+				<% } %> 
+
+				<% if(typeof userLogedIN === 'undefined') { %>
+					<li><a href="/user/login" class="nav-link px-2 link-secondary">Login</a></li>
+				<% } else if ( userLogedIN === false){ %>
+					<li><a href="/user/login" class="nav-link px-2 link-secondary">Login</a></li>
+				<% } else if (userLogedIN === true){ %>
+					<li><a href="/user/logout" class="nav-link px-2 link-secondary">Logout</a></li>
+				<% } %>
+				
 			</ul>
 
 
@@ -51,10 +64,11 @@
 		<main>
 			<%- body %>
 
+			<div id="message" style="display: none"><%= typeof message != 'undefined' ? message : '' %></div>
 		</main>
 
 
-		<footer class="py-5">
+		<footer class="py-4">
 			<p>Powered By MeowTech</p>
 		</footer>
 
@@ -72,6 +86,15 @@
 	</script>
 	<script src="https://kit.fontawesome.com/6e9eeabae3.js" crossorigin="anonymous"></script>
 	<script src="/js/script.js"></script>
+	<script>
+		let message = document.getElementById("message").innerText;
+		if (message.length > 0) {
+			alert(message);
+		}
+	</script>
+
+
+
 </body>
 
 

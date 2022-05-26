@@ -1,0 +1,86 @@
+<!-- Section: Design Block -->
+<section class="text-center">
+    <!-- Background image -->
+    <!-- <div class="p-2 bg-image login_bg_image"></div> -->
+
+    <div class="card mx-4 mx-md-5 shadow-5-strong" style="
+            background: hsla(0, 1%, 75%, 0.8);
+            backdrop-filter: blur(30px);
+            ">
+        <div class="card-body py-5 px-md-5">
+
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <h2 class="fw-bold mb-5">Sign up now</h2>
+                    <form action="/user/signup" method="post">
+                        <!-- full name -->
+                        <div class="form-outline mb-4">
+                            <label class="name" for="name">Name</label>
+                            <input type="text" name="name" class="form-control" />
+                        </div>
+
+
+                        <!-- Email input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="email">Email address</label>
+                            <input type="email" name="email" class="form-control" />
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="password">Password</label>
+                            <input type="password" name="password" class="form-control" />
+                        </div>
+
+                        <!-- Checkbox -->
+                        <div class="form-check d-flex justify-content-center mb-4">
+                            <input class="form-check-input me-2" type="checkbox" value="" name="primum" />
+                            <label class="form-check-label" for="primum">Join as primum user</label>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary btn-block mb-4">
+                            Sign up
+                        </button>
+
+                        <!-- Register buttons -->
+                        <div class="text-center">
+                            <p>or sign up with:</p>
+                            <button type="button" class="btn btn-link btn-floating mx-1">
+                                <i class="fab fa-facebook-f"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-link btn-floating mx-1">
+                                <i class="fab fa-google"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-link btn-floating mx-1">
+                                <i class="fab fa-twitter"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-link btn-floating mx-1">
+                                <i class="fab fa-github"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <h2 class="fw-bold mt-3">ALready have an account ?</h2>
+                    <a href="/user/login" class="btn btn-primary">Login</a>
+                </div>
+            </div>
+        </div>
+        <div id="message" style="display: none"><%= typeof message != 'undefined' ? message : '' %></div>
+
+    </div>
+
+
+</section>
+<!-- Section: Design Block -->
+
+<script>
+    let message = document.getElementById("message").innerText;
+    if (message.length > 0) {
+        alert(message);
+    }
+</script>
+
+
